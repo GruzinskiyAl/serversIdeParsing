@@ -1,29 +1,83 @@
-const dataContainer = document.querySelector("#allDataBlock");
+const fullDataContainer = document.querySelector("#fullData");
+const securitySettignsContainer = document.querySelector("#securitySettings");
+const traidingSessionsContainer = document.querySelector("#traidingSessions");
+
 const requestBtn = document.querySelector("#requestBtn");
-const req = new XMLHttpRequest();
+let req = new XMLHttpRequest();
 const serverUrl = 'http://localhost:8099';
 
-requestBtn.addEventListener("click", getAllData)
+requestBtn.addEventListener("click", getData)
 
-function createDataBlock(data) {
-    const div = document.createElement();
+function renderData(data, wrapperEl) {
+    const div = document.createElement("DIV");
     div.innerText = data;
-    dataContainer.appendChild(div);
+    wrapperEl.appendChild(div);
 }
 
-function getAllData() {
-    req.responseType = 'json';
-    req.open('GET', serverUrl + "/");
-    req.onreadystatechange  = () => {
+function getFullData() {
+    req.responseType = "json";
+    req.open("GET", serverUrl + "/");
+
+    req.onreadystatechange = () => {
         if (req.readyState === 4) {
-            let jsonResponse = req.response;
-            let data = JSON.parse(jsonResponse);
-            createDataBlock(data);
+            if (req.status === 200) {
+                renderData(JSON.stringify(req.response),  fullDataContainer)
+            } else {
+                renderData("Cant read Data", fullDataContainer)
+            }
         }
-    };
-    req.send(null);
+        
+    }
+    req.send();
+};
+
+function getSecSettings() {
+    req.responseType = "json";
+    req.open("GET", serverUrl + "/security_settings", true);
+    req.send();
+
+    req.onreadystatechange = () => {
+        if (req.readyState === 4) {
+            console.log(req.status)
+            if (req.status === 200) {
+                renderData(JSON.stringify(req.response),  securitySettignsContainer)
+            } else {
+                renderData("Cant read Data", securitySettignsContainer)
+            }
+        }
+    }
+
 }
 
-// setInterval( () => {
-//     settingsRequest();
-// }, 5000);
+function getTraidSessions() {
+    req.responseType = "json";
+    req.open("GET", serverUrl + "/traiding_sessions", true);
+    req.send();
+
+    req.onreadystatechange = () => {
+        if (req.readyState === 4) {
+            if (req.status === 200) {
+                let data = JSON.parse(req.response);
+                renderData(data, traidingSessionsContainer)
+            } else {
+                renderData("Cant read Data", traidingSessionsContainer)
+            }
+        }
+    }
+}
+
+
+
+function getData() {
+    return new Promise((res, rej)=>{
+        console.log(1)
+        getFullData();
+        res(); 
+    }).then(()=> {
+        console.log(2)
+        getSecSettings();
+    }).then(()=> {
+        console.log(3)
+        getTraidSessions();
+    })
+}

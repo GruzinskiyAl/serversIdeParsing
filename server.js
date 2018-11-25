@@ -1,20 +1,64 @@
-let http = require('http')
+let http = require('http');
+let fs = require("fs");
+
 let counter = 0;
-let fileData = "";
-http.createServer(handlerCallBack).listen(8099)//, '10.1.134.13');
-
-
-// let server = http.createServer(handlerCallBack);
-// let currentLocalIp = '10.1.134.13'
-// server.listen(8092)//, currentLocalIp);
+http.createServer(handlerCallBack).listen(8099)
 
 function handlerCallBack (request, response) {   
-    // response.setHeader("Access-Control-Allow-Origin", '*');
     switch (request.url) {
-        case "/":   
-            // response.setHeader("Access-Control-Allow-Origin", '*');
-            response.writeHead(200, {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"});
-            response.end(JSON.stringify({1:"lala"})); 
+        case "/":
+            fs.readFile("responseFile.json", "utf8", (err, data) => {
+                if (err) {
+                    response.writeHead(400, 
+                        {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"});
+                }
+
+                if (data) {
+                    response.writeHead(200, 
+                        {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"});
+                    response.end(data);
+                }
+            })
+            return;
+
+        case "/security_settings":
+            fs.readFile("responseFile.json", "utf8", (err, data) => {
+                if (err) {
+                    response.writeHead(400, 
+                        {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"});
+                }
+
+                if (data) {
+                    let dataObj = JSON.parse(data);
+                    let responseDataObj = dataObj.content.securitySettings;
+                    let responseData = JSON.stringify(responseDataObj);
+
+                    response.writeHead(200, 
+                        {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"});
+                    response.end(responseData);
+                }
+            })
+            return;
+
+        case "/traiding_sessions":
+            fs.readFile("responseFile.json", "utf8", (err, data) => {
+                if (err) {
+                    response.writeHead(400, 
+                        {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"});
+                }
+
+                if (data) {
+                    let dataObj = JSON.parse(data);
+                    let responseDataObj = dataObj.content.traidingSessions;
+                    let responseData = JSON.stringify(responseDataObj);
+
+                    response.writeHead(200, 
+                        {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"});
+                    response.end(responseData);
+                }
+            })
+            return;
+
         default:
             response.writeHead(404, {'Content-Type': 'text/plain'});
             response.end(`{"lala":'Not found'}`)
