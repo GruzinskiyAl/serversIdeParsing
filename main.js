@@ -3,12 +3,10 @@ const securitySettignsContainer = document.querySelector("#securitySettings");
 const tradingSessionsContainer = document.querySelector("#tradingSessions");
 
 const requestBtn = document.querySelector("#requestBtn");
-let req = new XMLHttpRequest();
-req.responseType = "json";
 
 const serverUrl = 'http://localhost:8099';
 
-requestBtn.addEventListener("click", getData)
+requestBtn.addEventListener("click", getData);
 
 function renderData(data, wrapperEl) {
     const div = document.createElement("DIV");
@@ -17,6 +15,8 @@ function renderData(data, wrapperEl) {
 }
 
 function getFullData() {
+    let req = new XMLHttpRequest();
+    req.responseType = "json";
     req.open("GET", serverUrl + "/");
 
     req.onreadystatechange = () => {
@@ -33,6 +33,8 @@ function getFullData() {
 };
 
 function getSecSettings() {
+    let req = new XMLHttpRequest();
+    req.responseType = "json";
     req.open("GET", serverUrl + "/security_settings");
     req.send();
 
@@ -50,6 +52,8 @@ function getSecSettings() {
 }
 
 function getTradSessions() {
+    let req = new XMLHttpRequest();
+    req.responseType = "json";
     req.open("GET", serverUrl + "/trading_sessions");
     req.send();
 
@@ -65,8 +69,7 @@ function getTradSessions() {
 }
 
 function getData() {
-    return new Promise((res, rej) => {
-        getFullData();
-    })
-
+    getFullData();
+    getSecSettings();
+    getTradSessions();
 }
