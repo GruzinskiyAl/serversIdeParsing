@@ -72,4 +72,39 @@ function getData() {
     getFullData();
     getSecSettings();
     getTradSessions();
+
+
+function createSimpleNode(key, value) {
+    const nodeView = document.createElement("DIV");
+    const openerEl = document.createElement("DIV");
+    const keyEl = document.createElement("DIV");
+    const separatorEl = document.createElement("DIV");
+    const valueEl = document.createElement("DIV");
+
+    nodeView.className = 
+
+    keyEl.innerText = key;
+    separatorEl.innerText = " : ";
+    valueEl.innerText = "value";
+
 }
+
+function recursiveJsonRender(obj) {
+    for (key in obj) {
+        if (typeof obj[key] === "object") {
+
+            // recursiveJsonRender(obj[key])
+        } else {
+
+        }
+    }
+}
+
+
+function generateJsonTree(jsonString) {
+    let data = JSON.parse(jsonString);
+
+
+    
+}
+
